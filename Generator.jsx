@@ -1,6 +1,6 @@
 var box = new Window('dialog', "SHAPES!");
 box.panel = box.add('panel', undefined, "Include Shapes");
-box.panel.shape_all = box.panel.add('checkbox', undefined, "All");
+//box.panel.shape_all = box.panel.add('checkbox', undefined, "All");
 box.panel.shape_diamond = box.panel.add('checkbox', undefined, "Diamond");
 box.panel.shape_trapezoid = box.panel.add('checkbox', undefined, "Trapezoid");
 box.panel.shape_triangle = box.panel.add('checkbox', undefined, "Triangle");
@@ -59,17 +59,17 @@ box.panel3.group.goBtn.onClick = function(){
   letsGo();
 };
 
-box.panel.shape_all.onClick = function() {
-  var thisBool = false;  
-  if(box.panel.shape_all.value == true) {
-    thisBool = true;
-  }
-  box.panel.shape_diamond.value = thisBool;
-  box.panel.shape_trapezoid.value = thisBool;
-  box.panel.shape_triangle.value = thisBool;
-  box.panel.shape_square.value = thisBool;
-  box.panel.shape_longPolygon.value = thisBool;
-}
+// box.panel.shape_all.onClick = function() {
+//   var thisBool = false;  
+//   if(box.panel.shape_all.value == true) {
+//     thisBool = true;
+//   }
+//   box.panel.shape_diamond.value = thisBool;
+//   box.panel.shape_trapezoid.value = thisBool;
+//   box.panel.shape_triangle.value = thisBool;
+//   box.panel.shape_square.value = thisBool;
+//   box.panel.shape_longPolygon.value = thisBool;
+//}
 
 
 
