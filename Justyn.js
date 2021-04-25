@@ -6,6 +6,7 @@ box.panel.shape_trapezoid = box.panel.add('checkbox', undefined, "Trapezoid");
 box.panel.shape_triangle = box.panel.add('checkbox', undefined, "Triangle");
 box.panel.shape_square = box.panel.add('checkbox', undefined, "Square");
 box.panel.shape_longPolygon = box.panel.add('checkbox', undefined, "Long Polygon");
+box.panel.shape_star = box.panel.add('checkbox', undefined, "Star");
 
 box.panel.alignChildren = "left";
 box.panel.character = 8;
@@ -40,7 +41,9 @@ box.panel3.group.closeBtn.onClick = function(){
 
 box.panel3.group.goBtn.onClick = function(){
   box.close();
-  letsGo();
+  if (box.panel.shape_star.value == true){ 
+    letsGo();
+  }
 };
 
 
@@ -49,7 +52,7 @@ box.panel3.group.goBtn.onClick = function(){
 
 
 function letsGo() {
-  documents.add();
+//  documents.add();
 
   var doc_ref = documents[0];
 
