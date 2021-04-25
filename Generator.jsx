@@ -6,6 +6,7 @@ box.panel.shape_trapezoid = box.panel.add('checkbox', undefined, "Trapezoid");
 box.panel.shape_triangle = box.panel.add('checkbox', undefined, "Triangle");
 box.panel.shape_square = box.panel.add('checkbox', undefined, "Square");
 box.panel.shape_longPolygon = box.panel.add('checkbox', undefined, "Long Polygon");
+box.panel.shape_hexagon = box.panel.add('checkbox', undefined, "Hexagon");
 box.panel.shape_star = box.panel.add('checkbox', undefined, "Star");
 
 box.panel.alignChildren = "left";
@@ -80,6 +81,9 @@ function letsGo() {
   const height = parseInt(box.panel2.group2.height.text)
   const column = parseInt(box.panel2.group2.column.text)
 
+  const xPosStart = 40
+  const yPosStart = 40
+  var xPos = xPosStart
 
   if (box.panel.shape_star.value == true){ 
     var doc_ref = documents[0];
@@ -146,9 +150,7 @@ function letsGo() {
     app.defaultStroked = true;
     app.filled = true;
 
-    const xPosStart = 40
-    const yPosStart = 40
-    var xPos = xPosStart
+
         
     for ( r = 1; r < (count+1); r++ ) {
       var row = (Math.ceil(r/column)-1) * -1
@@ -160,6 +162,29 @@ function letsGo() {
       fillColor.green = getRandomNum(128,255);
       fillColor.blue = getRandomNum(128,255);
       rect.fillColor = fillColor
+      xPos = xPosStart + (width * (r%column))
+    }
+  }
+
+
+  if (box.panel.shape_hexagon.value == true) {
+    app.defaultStroked = true;
+    app.filled = true;
+
+    var xPos = xPosStart
+        
+    for ( r = 1; r < (count+1); r++ ) {
+      var row = (Math.ceil(r/column)-1) * -1
+      var yPos = row * height + yPosStart
+      var hexGroup = app.activeDocument.groupItems.add();
+     // var rect = squareGroup.pathItems.rectangle( yPos, xPos, width, height );
+      //Create octagon, and 8-sided polygon
+      var hexagon = hexGroup.pathItems.polygon( xPos+xPosStart, yPos, width/2, 6 );
+      var fillColor = new RGBColor
+      fillColor.red = getRandomNum(128,255);
+      fillColor.green = getRandomNum(128,255);
+      fillColor.blue = getRandomNum(128,255);
+      hexagon.fillColor = fillColor
       xPos = xPosStart + (width * (r%column))
     }
   }
