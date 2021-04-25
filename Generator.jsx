@@ -80,7 +80,6 @@ function letsGo() {
   const height = parseInt(box.panel2.group2.height.text)
   const column = parseInt(box.panel2.group2.column.text)
 
-  const colors = ['red', 'cyan', 'magenta', 'orange', 'blue', 'lime']
 
   if (box.panel.shape_star.value == true){ 
     var doc_ref = documents[0];
