@@ -217,7 +217,7 @@ function letsGo() {
       var yPos = ((row * hexHigh/2) + yPosStart) 
       var triangleGroup = app.activeDocument.groupItems.add();
 
-      xPos = ((( r % column ) ) * xOffset ) + ( xPosStart * 2 )
+      xPos = ((( r % column ) ) * xOffset ) + (( (xOffset * -1) * (( row * -1 ) % 2 ) * ( column % 2 ))) + ( xPosStart * 2 )
 
       var triangle = triangleGroup.pathItems.polygon( xPos, yPos, triangleSide, 3 );
       var fillColor = new RGBColor
