@@ -1,15 +1,15 @@
 var box = new Window('dialog', "SHAPES!");
 box.panel = box.add('panel', undefined, "Include Shapes");
-//box.panel.shape_all = box.panel.add('checkbox', undefined, "All");
-//box.panel.shape_diamond = box.panel.add('checkbox', undefined, "Diamond");
-//box.panel.shape_trapezoid = box.panel.add('checkbox', undefined, "Trapezoid");
 box.panel.shape_square = box.panel.add('checkbox', undefined, "Square");
 box.panel.shape_triangle = box.panel.add('checkbox', undefined, "Triangle");
-//box.panel.shape_longPolygon = box.panel.add('checkbox', undefined, "Long Polygon");
 box.panel.shape_hexagon = box.panel.add('checkbox', undefined, "Hexagon");
+//box.panel.shape_diamond = box.panel.add('checkbox', undefined, "Diamond");
+//box.panel.shape_trapezoid = box.panel.add('checkbox', undefined, "Trapezoid");
+//box.panel.shape_longPolygon = box.panel.add('checkbox', undefined, "Long Polygon");
 //box.panel.shape_star = box.panel.add('checkbox', undefined, "Star");
+box.panel.shape_all = box.panel.add('checkbox', undefined, "All");
 
-//box.panel.shape_diamond.value = true
+// box.panel.shape_diamond.value = true
 // box.panel.shape_square.value = true
 // box.panel.shape_hexagon.value = true
 
@@ -19,28 +19,29 @@ box.panel.character = 8;
 
 box.panel2 = box.add('panel', undefined, "Generate");
 box.panel2.group1 = box.panel2.add('group', undefined );
-box.panel2.group1.orientation='row';
-box.panel2.group1.countLabel = box.panel2.group1.add('statictext', undefined, "How many to create:");
+box.panel2.orientation='column';
+
+box.panel2.group1.countLabel = box.panel2.group1.add('statictext', undefined, "Quantity:");
 box.panel2.group1.count = box.panel2.group1.add("edittext", undefined, "10");
-box.panel2.group1.count.characters = 8;
+box.panel2.group1.count.characters = 3;
 
 box.panel2.group2 = box.panel2.add('group', undefined );
 box.panel2.group2.orientation='row';
-box.panel2.group2.clusterLabel = box.panel2.group2.add('statictext', undefined, "How many clusters:");
-box.panel2.group2.cluster = box.panel2.group2.add("edittext", undefined, "3");
-box.panel2.group2.cluster.characters = 8;
-
-box.panel2.group2.columnLabel = box.panel2.group2.add('statictext', undefined, "How many wide:");
+box.panel2.group2.columnLabel = box.panel2.group2.add('statictext', undefined, "Columns:");
 box.panel2.group2.column = box.panel2.group2.add("edittext", undefined, "6");
 box.panel2.group2.column.characters = 3;
 
-box.panel2.group2.widthLabel = box.panel2.group2.add('statictext', undefined, "How wide:");
-box.panel2.group2.width = box.panel2.group2.add("edittext", undefined, "75");
-box.panel2.group2.width.characters = 3;
+box.panel2.group3 = box.panel2.add('group', undefined );
+box.panel2.group3.orientation='row';
+box.panel2.group3.widthLabel = box.panel2.group3.add('statictext', undefined, "Size (px):");
+box.panel2.group3.width = box.panel2.group3.add("edittext", undefined, "75");
+box.panel2.group3.width.characters = 3;
 
-box.panel2.group2.heightLabel = box.panel2.group2.add('statictext', undefined, "How high:");
-box.panel2.group2.height = box.panel2.group2.add("edittext", undefined, "75");
-box.panel2.group2.height.characters = 3;
+// box.panel2.group4 = box.panel2.add('group', undefined );
+// box.panel2.group4.orientation='row';
+// box.panel2.group4.heightLabel = box.panel2.group4.add('statictext', undefined, "How high:");
+// box.panel2.group4.height = box.panel2.group4.add("edittext", undefined, "75");
+// box.panel2.group4.height.characters = 3;
 
 
 box.panel2.alignChildren = "right";
@@ -63,27 +64,28 @@ box.panel3.group.goBtn.onClick = function(){
   letsGo();
 };
 
-// box.panel.shape_all.onClick = function() {
-//   var thisBool = false;  
-//   if(box.panel.shape_all.value == true) {
-//     thisBool = true;
-//   }
-//   box.panel.shape_diamond.value = thisBool;
-//   box.panel.shape_trapezoid.value = thisBool;
-//   box.panel.shape_triangle.value = thisBool;
-//   box.panel.shape_square.value = thisBool;
-//   box.panel.shape_longPolygon.value = thisBool;
-//}
+box.panel.shape_all.onClick = function() {
+  var thisBool = false;  
+  if(box.panel.shape_all.value == true) {
+    thisBool = true;
+  }
+  //box.panel.shape_diamond.value = thisBool;
+  //box.panel.shape_trapezoid.value = thisBool;
+  box.panel.shape_triangle.value = thisBool;
+  box.panel.shape_square.value = thisBool;
+  box.panel.shape_hexagon.value = thisBool;
+  //box.panel.shape_longPolygon.value = thisBool;
+}
 
 
 
 
 function letsGo() {
-//  documents.add();
+  //  documents.add();
   const count = parseInt(box.panel2.group1.count.text)
-  const width = parseInt(box.panel2.group2.width.text)
-  const height = parseInt(box.panel2.group2.height.text)
   const column = parseInt(box.panel2.group2.column.text)
+  const width = parseInt(box.panel2.group3.width.text)
+  //const height = parseInt(box.panel2.group2.height.text)
 
 
   var idoc = app.activeDocument;
@@ -108,14 +110,14 @@ function letsGo() {
     //app.defaultStroked = true;
     app.filled = true;
 
-    var groupHeight = Math.ceil((count/column)) * height - (yPosStart/1.5)
+    var groupHeight = Math.ceil((count/column)) * width - (yPosStart/1.5)
     
     for ( r = 1; r < ( count + 1 ); r++ ) {
       var squareGroup = app.activeDocument.groupItems.add();
       
       var row = (Math.ceil( r / column ) -1 ) * -1
-      var yPos = row * height + yPosStart
-      var rect = squareGroup.pathItems.rectangle( yPos, xPos, width, height );
+      var yPos = row * width + yPosStart
+      var rect = squareGroup.pathItems.rectangle( yPos, xPos, width, width );
 
       xPos = xPosStart + ( width * ( r % column ) );
       
