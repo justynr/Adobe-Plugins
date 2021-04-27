@@ -1,14 +1,17 @@
 var box = new Window('dialog', "SHAPES!");
 box.panel = box.add('panel', undefined, "Include Shapes");
 //box.panel.shape_all = box.panel.add('checkbox', undefined, "All");
-box.panel.shape_diamond = box.panel.add('checkbox', undefined, "Diamond");
-box.panel.shape_trapezoid = box.panel.add('checkbox', undefined, "Trapezoid");
-box.panel.shape_triangle = box.panel.add('checkbox', undefined, "Triangle");
+//box.panel.shape_diamond = box.panel.add('checkbox', undefined, "Diamond");
+//box.panel.shape_trapezoid = box.panel.add('checkbox', undefined, "Trapezoid");
 box.panel.shape_square = box.panel.add('checkbox', undefined, "Square");
-box.panel.shape_longPolygon = box.panel.add('checkbox', undefined, "Long Polygon");
+box.panel.shape_triangle = box.panel.add('checkbox', undefined, "Triangle");
+//box.panel.shape_longPolygon = box.panel.add('checkbox', undefined, "Long Polygon");
 box.panel.shape_hexagon = box.panel.add('checkbox', undefined, "Hexagon");
-box.panel.shape_triangle.value = true
-box.panel.shape_star = box.panel.add('checkbox', undefined, "Star");
+//box.panel.shape_star = box.panel.add('checkbox', undefined, "Star");
+
+//box.panel.shape_diamond.value = true
+// box.panel.shape_square.value = true
+// box.panel.shape_hexagon.value = true
 
 box.panel.alignChildren = "left";
 box.panel.character = 8;
@@ -89,7 +92,7 @@ function letsGo() {
   docLeft = activeAB.artboardRect[0];
   docTop = activeAB.artboardRect[1]; 
 
-  const xPosStart = docLeft + width/2
+  const xPosStart = docLeft + width / 2
   var yPosStart = docTop - width
   var xPos = xPosStart
 
@@ -98,6 +101,116 @@ function letsGo() {
     stroked : false,
     strokeWidth : 0,
     opacity: 75
+  }
+
+  if (box.panel.shape_square.value == true) {
+    app.activeDocument.layers.add()
+    //app.defaultStroked = true;
+    app.filled = true;
+
+    var groupHeight = Math.ceil((count/column)) * height - (yPosStart/1.5)
+    
+    for ( r = 1; r < ( count + 1 ); r++ ) {
+      var squareGroup = app.activeDocument.groupItems.add();
+      
+      var row = (Math.ceil( r / column ) -1 ) * -1
+      var yPos = row * height + yPosStart
+      var rect = squareGroup.pathItems.rectangle( yPos, xPos, width, height );
+
+      xPos = xPosStart + ( width * ( r % column ) );
+      
+      var fillColor = new RGBColor
+      var newColour = getNextColor(r)
+      fillColor.red = newColour[0];
+      fillColor.green = newColour[1];
+      fillColor.blue = newColour[2];
+      rect.fillColor = fillColor;
+      rect.opacity = shapeOptions.opacity;
+      rect.stroked = shapeOptions.stroked;
+    }
+    yPosStart -= groupHeight
+  }
+
+  if (box.panel.shape_triangle.value == true) {
+    app.activeDocument.layers.add()
+    var hexHigh = ((Math.sqrt(3)) * width)
+    var xOffset = width * 0.5
+
+    var triangleSide = width * 0.5773503161570331
+
+    var triHeight = Math.ceil((count/column)*1.5) * (hexHigh /4)
+
+    for ( r = 0; r < (count); r++ ) {
+      var triangleGroup = app.activeDocument.groupItems.add();
+      
+      var row = (Math.ceil(( r + 1 ) / column ) -1 ) * -1
+      var yOffset = (hexHigh * (( r ) % 2 )) / 2
+      var yPos = (( row * hexHigh / 2 ) + ( yPosStart ) ) 
+      xPos = ((( r % column )) * xOffset ) + (( ( xOffset * -1 ) * (( row * -1 ) % 2 ) * ( column % 2 ))) + ( xPosStart * 2 )
+
+      var triangle = triangleGroup.pathItems.polygon( xPos, yPos, triangleSide, 3 );
+      var fillColor = new RGBColor
+
+      var newColour = getNextColor(r)
+      fillColor.red = newColour[0];
+      fillColor.green = newColour[1];
+      fillColor.blue = newColour[2];
+      triangle.fillColor = fillColor
+      triangle.opacity = shapeOptions.opacity;
+      triangle.stroked = shapeOptions.stroked;
+      triangle.rotate(180 * (( (r+1) % 2 ) + ( row % 2 )))
+    }
+    yPosStart -= triHeight
+  }
+
+  if (box.panel.shape_hexagon.value == true) {
+    app.activeDocument.layers.add()
+
+    var localWidth = width * 2
+    var hexHigh = ((Math.sqrt( 3 ) / 2) * localWidth)
+    var xOffset = localWidth * 0.75
+
+    var hexHeight = Math.ceil((count/column)) * hexHigh - (yPosStart/1.66666667)
+        
+    for ( r = 0; r < (count); r++ ) {
+      var hexGroup = app.activeDocument.groupItems.add();
+      
+      var row = (Math.ceil( ( r + 1 ) / column ) -1 ) * -1
+      var yOffset = (hexHigh * ((r)%2))/2
+      var yPos = ( ( row * hexHigh ) + ( yPosStart * 1.333333 ) ) + yOffset
+      xPos = ((( r % (column) ) ) * xOffset ) + (( xOffset * (( row * -1 ) % 2 ) * ( column % 2 ))) + ( xPosStart * 2.25 )
+
+      var hexagon = hexGroup.pathItems.polygon( xPos, yPos, localWidth / 2, 6 );
+      
+      var fillColor = new RGBColor
+      var newColour = getNextColor(r)
+      fillColor.red = newColour[0];
+      fillColor.green = newColour[1];
+      fillColor.blue = newColour[2];
+      hexagon.fillColor = fillColor
+      hexagon.opacity = shapeOptions.opacity;
+      hexagon.stroked = shapeOptions.stroked;
+    }
+  }
+
+  /*
+  if (box.panel.shape_diamond.value == true){
+    if ( app.documents.length > 0 ) {
+      var triangleGroup = app.activeDocument.groupItems.add();
+      // Create a triangle and add text, the new art is created inside the group
+      var trianglePath = triangleGroup.pathItems.add();
+      trianglePath.setEntirePath( Array( Array(75, 100), Array(300, 100),
+      Array(75, Math.tan(1.0471975) * 100 + 100) ) );
+      trianglePath.closed = true;
+      trianglePath.stroked = shapeOptions.stroked;
+      trianglePath.filled = shapeOptions.filled;
+      trianglePath.strokeWidth = shapeOptions.strokeWidth;
+      var fillColor = new RGBColor;
+      fillColor.red = 255;
+      fillColor.green = 0;
+      fillColor.blue = 0;
+    }
+      trianglePath.fillColor = fillColor
   }
 
   if (box.panel.shape_star.value == true){ 
@@ -141,108 +254,7 @@ function letsGo() {
       path_ref.stroked = false;
     }
   }
-
-  if (box.panel.shape_diamond.value == true){
-    if ( app.documents.length > 0 ) {
-      var triangleGroup = app.activeDocument.groupItems.add();
-      // Create a triangle and add text, the new art is created inside the group
-      var trianglePath = triangleGroup.pathItems.add();
-      trianglePath.setEntirePath( Array( Array(100, 100), Array(300, 100),
-      Array(200, Math.tan(1.0471975) * 100 + 100) ) );
-      trianglePath.closed = true;
-      trianglePath.stroked = shapeOptions.stroked;
-      trianglePath.filled = shapeOptions.filled;
-      trianglePath.strokeWidth = shapeOptions.strokeWidth;
-      var fillColor = new RGBColor;
-      fillColor.red = 255;
-      fillColor.green = 0;
-      fillColor.blue = 0;
-    }
-      trianglePath.fillColor = fillColor
-  }
-
-  if (box.panel.shape_square.value == true) {
-    //app.defaultStroked = true;
-    app.filled = true;
-        
-    for ( r = 1; r < (count+1); r++ ) {
-      var squareGroup = app.activeDocument.groupItems.add();
-      
-      var row = (Math.ceil(r/column)-1) * -1
-      var yPos = row * height + yPosStart
-      var rect = squareGroup.pathItems.rectangle( yPos, xPos, width, height );
-
-      xPos = xPosStart + (width * (r%column));
-      
-      var fillColor = new RGBColor
-      var newColour = getNextColor(r)
-      fillColor.red = newColour[0];
-      fillColor.green = newColour[1];
-      fillColor.blue = newColour[2];
-      rect.fillColor = fillColor;
-      rect.opacity = shapeOptions.opacity;
-      rect.stroked = shapeOptions.stroked;
-    }
-  }
-
-
-  if (box.panel.shape_hexagon.value == true) {
-
-    width = width*2
-    var hexHigh = ((Math.sqrt(3)/2) * width)
-    var xOffset = width * 0.75
-        
-    for ( r = 0; r < (count); r++ ) {
-      var hexGroup = app.activeDocument.groupItems.add();
-      
-      var row = (Math.ceil((r+1)/column)-1) * -1
-      var yOffset = (hexHigh * ((r)%2))/2
-      var yPos = ( ( row * hexHigh ) + ( yPosStart * 2 ) ) + yOffset
-      xPos = ((( r % (column) ) ) * xOffset) + (( xOffset * (( row * -1 ) % 2 ) * ( column % 2 ))) + (xPosStart * 2.25)
-
-      var hexagon = hexGroup.pathItems.polygon( xPos, yPos, width/2, 6 );
-      
-      var fillColor = new RGBColor
-      var newColour = getNextColor(r)
-      fillColor.red = newColour[0];
-      fillColor.green = newColour[1];
-      fillColor.blue = newColour[2];
-      hexagon.fillColor = fillColor
-      hexagon.opacity = shapeOptions.opacity;
-      hexagon.stroked = shapeOptions.stroked;
-    }
-  }
-
-  if (box.panel.shape_triangle.value == true) {
-
-    var hexHigh = ((Math.sqrt(3)) * width)
-    var xOffset = width * 0.5
-
-    var triangleSide = width * 0.5773503161570331
-
-    var rndColStart = getRandomNum(0,100)
-        
-    for ( r = 0; r < (count); r++ ) {
-      var triangleGroup = app.activeDocument.groupItems.add();
-      
-      var row = (Math.ceil((r+1)/column)-1) * -1
-      var yOffset = (hexHigh * ((r)%2))/2
-      var yPos = ((row * hexHigh/2) + yPosStart) 
-      xPos = ((( r % column ) ) * xOffset ) + (( (xOffset * -1) * (( row * -1 ) % 2 ) * ( column % 2 ))) + ( xPosStart * 2 )
-
-      var triangle = triangleGroup.pathItems.polygon( xPos, yPos, triangleSide, 3 );
-      var fillColor = new RGBColor
-
-      var newColour = getNextColor(r)
-      fillColor.red = newColour[0];
-      fillColor.green = newColour[1];
-      fillColor.blue = newColour[2];
-      triangle.fillColor = fillColor
-      triangle.opacity = shapeOptions.opacity;
-      triangle.stroked = shapeOptions.stroked;
-      triangle.rotate(180 * ((r % 2) + (row % 2)))
-    }
-  }
+*/
 }
 
 var colorList = [
@@ -261,12 +273,13 @@ var colorList = [
   [75,75,75]
 ]
 
+//Cycle through colour list
 function getNextColor(i){
   var col = i % colorList.length
   return (colorList[col])
 }
 
-//Get Random Colour
+//Get random colour
 function getRandomColor(){
   const rnd = Math.round(getRandomNum(0, colorList.length - 1),0)
   return(colorList[rnd])
